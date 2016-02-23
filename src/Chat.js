@@ -124,12 +124,11 @@ class Chat extends React.Component{
 const styles = StyleSheet.create({
   mainContainer: {
     justifyContent: 'center',
-    backgroundColor: '#19CAB6'
+    backgroundColor: '#19CAB6',
     flexDirection: 'column',
     flex: 1,
     padding: 30,
     marginTop: 20
-
   },
   button: {
     flex: 3,

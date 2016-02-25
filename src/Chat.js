@@ -13,7 +13,7 @@ const MessageItem = require('./MessageItem');
 const moment = require('moment');
 const InvertibleScrollView = require('react-native-invertible-scroll-view');
 
-const FIREBASE_URL ='https://rn-notetaker.firebaseio.com';
+const FIREBASE_URL = 'https://rn-notetaker.firebaseio.com';
 
 class Chat extends React.Component{
   constructor(props) {
@@ -27,7 +27,15 @@ class Chat extends React.Component{
     }
   }
 
-  listenForMesssages() {
+  componentDidMount() {
+    this._listenForMesssages();
+  }
+
+  componentWillUnmount() {
+     this.messagesRef.off();
+  }
+
+  _listenForMesssages() {
     this.messagesRef.on('value', (snapshot) => {
       let messages = [];
       snapshot.forEach((child) => {
@@ -38,19 +46,10 @@ class Chat extends React.Component{
           id: child.key()
         })
       })
-      let reversedMessages = messages.reverse();
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(reversedMessages)
+        dataSource: this.state.dataSource.cloneWithRows(messages.reverse())
       })
     })
-  }
-
-  componentDidMount() {
-    this.listenForMesssages();
-  }
-
-  componentWillUnmount() {
-     this.messagesRef.off();
   }
 
   _sendMessage() {
@@ -75,7 +74,7 @@ class Chat extends React.Component{
     )
   }
 
-  handleChange(e) {
+  _handleChange(e) {
     this.setState({
       message: e.nativeEvent.text
     })
@@ -96,7 +95,7 @@ class Chat extends React.Component{
         <TextInput
           style={styles.searchInput}
           value={this.state.message}
-          onChange={this.handleChange.bind(this)}
+          onChange={this._handleChange.bind(this)}
           placeHolder="Enter a chat message." />
         <TouchableHighlight
           style={styles.button}
